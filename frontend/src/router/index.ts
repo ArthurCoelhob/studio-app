@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-import store from '@/store'
+import Vue from 'vue';
+import VueRouter, { RouteConfig } from 'vue-router';
+import store from '@/store';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
@@ -22,8 +22,8 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/agenda',
-    name: 'Agenda',
-    component: () => import('@/views/Agenda.vue'),
+    name: 'Schedule',
+    component: () => import('@/views/Schedule.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -51,12 +51,12 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = store.getters.isAuthenticated
 
   if (requiresAuth && !isAuthenticated) {
-    next('/login')
+    next('/login');
   } else if (to.path === '/login' && isAuthenticated) {
-    next('/home')
+    next('/home');
   } else {
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;

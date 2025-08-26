@@ -161,13 +161,13 @@ import SidebarLayout from '@/components/sidebarLayout.vue'
   }
 })
 export default class Settings extends Vue {
-  professionals: Professional[] = []
-  notifications = true
-  autoConfirm = false
-  sessionDuration = 60
+  professionals: Professional[] = [];
+  notifications = true;
+  autoConfirm = false;
+  sessionDuration = 60;
 
   async mounted() {
-    this.professionals = await MockService.getProfessionals()
+    this.professionals = await MockService.getProfessionals();
   }
 }
 </script>

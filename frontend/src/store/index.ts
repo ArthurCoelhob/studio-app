@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { User, Appointment } from '@/types'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { User, Appointment } from '@/types';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 interface State {
-  user: User | null
-  appointments: Appointment[]
-  isAuthenticated: boolean
+  user: User | null;
+  appointments: Appointment[];
+  isAuthenticated: boolean;
 }
 
 export default new Vuex.Store<State>({
@@ -18,33 +18,33 @@ export default new Vuex.Store<State>({
   },
   mutations: {
     SET_USER(state, user: User) {
-      state.user = user
-      state.isAuthenticated = true
+      state.user = user;
+      state.isAuthenticated = true;
     },
     LOGOUT(state) {
-      state.user = null
-      state.isAuthenticated = false
-      state.appointments = []
+      state.user = null;
+      state.isAuthenticated = false;
+      state.appointments = [];
     },
     SET_APPOINTMENTS(state, appointments: Appointment[]) {
-      state.appointments = appointments
+      state.appointments = appointments;
     },
     ADD_APPOINTMENT(state, appointment: Appointment) {
-      state.appointments.push(appointment)
+      state.appointments.push(appointment);
     }
   },
   actions: {
     login({ commit }, user: User) {
-      commit('SET_USER', user)
+      commit('SET_USER', user);
     },
     logout({ commit }) {
-      commit('LOGOUT')
+      commit('LOGOUT');
     },
     setAppointments({ commit }, appointments: Appointment[]) {
-      commit('SET_APPOINTMENTS', appointments)
+      commit('SET_APPOINTMENTS', appointments);
     },
     addAppointment({ commit }, appointment: Appointment) {
-      commit('ADD_APPOINTMENT', appointment)
+      commit('ADD_APPOINTMENT', appointment);
     }
   },
   getters: {
@@ -52,4 +52,4 @@ export default new Vuex.Store<State>({
     currentUser: state => state.user,
     userAppointments: state => state.appointments
   }
-})
+});

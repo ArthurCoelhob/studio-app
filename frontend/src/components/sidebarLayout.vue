@@ -98,39 +98,39 @@ export default class SidebarLayout extends Vue {
   drawer = true
 
   get currentUser() {
-    return this.$store.getters.currentUser
+    return this.$store.getters.currentUser;
   }
 
   get userRole() {
-    return this.currentUser && this.currentUser.role === 'admin' ? 'Administrador' : 'Cliente'
+    return this.currentUser && this.currentUser.role === 'admin' ? 'Administrador' : 'Cliente';
   }
 
   get currentDate() {
     return new Date().toLocaleDateString('pt-BR', { 
       day: '2-digit', 
       month: 'short' 
-    })
+    });
   }
 
   get menuItems() {
     const baseItems = [
       { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/home' },
       { title: 'Agenda', icon: 'mdi-calendar-month', route: '/agenda' }
-    ]
+    ];
 
     if (this.currentUser && this.currentUser.role === 'admin') {
       baseItems.push(
         { title: 'Clientes', icon: 'mdi-account-group', route: '/clients' },
         { title: 'Configurações', icon: 'mdi-cog', route: '/settings' }
-      )
+      );
     }
 
-    return baseItems
+    return baseItems;
   }
 
   logout() {
-    this.$store.dispatch('logout')
-    this.$router.push('/login')
+    this.$store.dispatch('logout');
+    this.$router.push('/login');
   }
 }
 </script>

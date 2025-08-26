@@ -5,6 +5,14 @@ export interface User {
   role: 'admin' | 'client'
 }
 
+export interface Client {
+  id: number
+  name: string
+  email: string
+  phone: string
+  active: boolean
+}
+
 export interface Professional {
   id: number
   name: string
@@ -14,6 +22,7 @@ export interface Professional {
 export interface Appointment {
   id: number
   userId: number
+  clientId?: number
   professionalId: number
   service: 'pilates' | 'fisioterapia'
   date: string

@@ -123,39 +123,7 @@
       </v-col>
     </v-row>
 
-    <v-row v-if="currentUser && currentUser.role === 'admin'">
-      <v-col cols="12">
-        <v-card class="elevation-4 pa-6" style="border-radius: 12px">
-          <v-card-title class="text-h5 mb-4 primary--text">
-            <v-icon large class="mr-3" color="primary">mdi-chart-line</v-icon>
-            Resumo da Semana
-          </v-card-title>
-          <v-row>
-            <v-col cols="12" md="4">
-              <div class="text-center pa-4" style="background: #F5F5F5; border-radius: 8px">
-                <v-icon size="36" color="primary" class="mb-2">mdi-trending-up</v-icon>
-                <div class="text-h4 font-weight-bold primary--text">85%</div>
-                <div class="text-subtitle-2 grey--text">Taxa de Ocupação</div>
-              </div>
-            </v-col>
-            <v-col cols="12" md="4">
-              <div class="text-center pa-4" style="background: #F5F5F5; border-radius: 8px">
-                <v-icon size="36" color="success" class="mb-2">mdi-cash</v-icon>
-                <div class="text-h4 font-weight-bold success--text">R$ 2.450</div>
-                <div class="text-subtitle-2 grey--text">Receita Semanal</div>
-              </div>
-            </v-col>
-            <v-col cols="12" md="4">
-              <div class="text-center pa-4" style="background: #F5F5F5; border-radius: 8px">
-                <v-icon size="36" color="accent" class="mb-2">mdi-star</v-icon>
-                <div class="text-h4 font-weight-bold accent--text">4.8</div>
-                <div class="text-subtitle-2 grey--text">Avaliação Média</div>
-              </div>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+
   </sidebar-layout>
 </template>
 
