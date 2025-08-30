@@ -7,27 +7,29 @@
             <h1 class="text-h4 primary--text font-weight-bold">Studio App</h1>
           </v-card-title>
           
-          <v-form @submit.prevent="handleLogin">
+          <v-form ref="form" v-model="valid" @submit.prevent="login">
             <v-text-field
-              v-model="cpf"
+              v-model="form.cpf"
               label="CPF"
               outlined
               large
               prepend-inner-icon="mdi-account"
-              :rules="[rules.required]"
               class="mb-4"
             />
             
             <v-text-field
-              v-model="password"
+              v-model="form.password"
               label="Senha"
               type="password"
               outlined
               large
               prepend-inner-icon="mdi-lock"
-              :rules="[rules.required]"
-              class="mb-6"
+              class="mb-4"
             />
+            
+            <v-alert v-if="errorMessage" type="error" class="mb-4">
+              {{ errorMessage }}
+            </v-alert>
             
             <v-btn
               type="submit"
@@ -35,6 +37,7 @@
               large
               block
               :loading="loading"
+
               class="text-h6 py-6"
             >
               Entrar
@@ -49,40 +52,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { MockService } from '@/services/mockService'
+import LoginController from './LoginController'
 
-@Component
-export default class Login extends Vue {
-  cpf = ''
-  password = ''
-  loading = false
-  
-  rules = {
-    required: (value: string) => !!value || 'Campo obrigatório'
-  }
-
-  async handleLogin() {
-    if (!this.cpf || !this.password) return
-    
-    this.loading = true
-    
-    try {
-      const user = await MockService.login(this.cpf, this.password)
-      
-      if (user) {
-        this.$store.dispatch('login', user)
-        this.$router.push('/home')
-      } else {
-        alert('CPF não encontrado')
-      }
-    } catch (error) {
-      console.error('Erro no login:', error)
-    } finally {
-      this.loading = false
-    }
-  }
-}
+export default LoginController
 </script>
 
 <style scoped>

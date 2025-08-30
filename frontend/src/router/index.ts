@@ -12,30 +12,34 @@ const routes: Array<RouteConfig> = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Login.vue')
+    component: () => import('@/views/Login/Login.vue')
   },
   {
     path: '/home',
     name: 'Home',
-    component: () => import('@/views/Home.vue'),
+    component: () => import('@/views/Home/Home.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/schedule',
+    name: 'Schedule',
+    component: () => import('@/views/Schedule/Schedule.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/agenda',
-    name: 'Schedule',
-    component: () => import('@/views/Schedule.vue'),
-    meta: { requiresAuth: true }
+    redirect: '/schedule'
   },
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import('@/views/Settings.vue'),
+    component: () => import('@/views/Settings/Settings.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/clients',
     name: 'Clients',
-    component: () => import('@/views/Clients.vue'),
+    component: () => import('@/views/Clients/Clients.vue'),
     meta: { requiresAuth: true }
   }
 ]

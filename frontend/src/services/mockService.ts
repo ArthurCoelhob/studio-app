@@ -8,7 +8,7 @@ export const mockUsers: User[] = [
 export const mockProfessionals: Professional[] = [
   { id: 1, name: 'Dr. Kaio Jorge', specialty: 'fisioterapia' },
   { id: 2, name: 'Danielle', specialty: 'pilates' },
-  { id: 3, name: 'CNathalia', specialty: 'pilates' }
+  { id: 3, name: 'Nathalia', specialty: 'pilates' }
 ];
 
 export const mockTimeSlots: TimeSlot[] = [
@@ -23,10 +23,10 @@ export const mockTimeSlots: TimeSlot[] = [
 ];
 
 export const mockClients: Client[] = [
-  { id: 1, name: 'Maria Silva', email: 'maria@email.com', phone: '(11) 99999-9999', active: true },
-  { id: 2, name: 'João Santos', email: 'joao@email.com', phone: '(11) 88888-8888', active: true },
-  { id: 3, name: 'Ana Costa', email: 'ana@email.com', phone: '(11) 77777-7777', active: true },
-  { id: 4, name: 'Pedro Lima', email: 'pedro@email.com', phone: '(11) 66666-6666', active: true }
+  { id: 1, name: 'Maria Silva', cpf: '123.456.789-01', email: 'maria@email.com', phone: '(11) 99999-9999', address: 'Rua das Flores, 123 - São Paulo/SP', frequency: 3, active: true },
+  { id: 2, name: 'João Santos', cpf: '987.654.321-09', email: 'joao@email.com', phone: '(11) 88888-8888', address: 'Av. Paulista, 456 - São Paulo/SP', frequency: 2, active: true },
+  { id: 3, name: 'Ana Costa', cpf: '456.789.123-45', email: 'ana@email.com', phone: '(11) 77777-7777', address: 'Rua Augusta, 789 - São Paulo/SP', frequency: 1, active: true },
+  { id: 4, name: 'Pedro Lima', cpf: '321.654.987-12', email: 'pedro@email.com', phone: '(11) 66666-6666', address: 'Rua da Consolação, 321 - São Paulo/SP', frequency: 4, active: true }
 ];
 
 export const mockAppointments: Appointment[] = [

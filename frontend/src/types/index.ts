@@ -8,8 +8,11 @@ export interface User {
 export interface Client {
   id: number
   name: string
+  cpf: string
   email: string
   phone: string
+  address: string
+  frequency: number
   active: boolean
 }
 

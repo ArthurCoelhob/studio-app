@@ -71,7 +71,7 @@
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-toolbar-title class="text-h5 font-weight-bold ml-2">Studio App</v-toolbar-title>
       <v-spacer />
-      <v-chip color="secondary" dark class="mr-4">
+      <v-chip color="accent" dark class="mr-4">
         <v-icon left small>mdi-calendar-today</v-icon>
         {{ currentDate }}
       </v-chip>
@@ -115,7 +115,7 @@ export default class SidebarLayout extends Vue {
   get menuItems() {
     const baseItems = [
       { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/home' },
-      { title: 'Agenda', icon: 'mdi-calendar-month', route: '/agenda' }
+      { title: 'Agenda', icon: 'mdi-calendar-month', route: '/schedule' }
     ];
 
     if (this.currentUser && this.currentUser.role === 'admin') {
