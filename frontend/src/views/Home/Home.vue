@@ -7,7 +7,7 @@
       </v-col>
     </v-row>
 
-    <v-row class="mb-6">
+    <v-row class="mb-6" v-if="isAdmin">
       <v-col cols="12" sm="6" md="3">
         <v-card class="elevation-4 text-center pa-6" color="primary" dark style="border-radius: 12px">
           <v-icon size="48" class="mb-3">mdi-calendar-check</v-icon>
@@ -73,52 +73,6 @@
               </v-btn>
             </v-col>
           </v-row>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" md="6" v-if="currentUser && currentUser.role === 'client'">
-        <v-card class="elevation-4 pa-6" style="border-radius: 12px">
-          <v-card-title class="text-h5 mb-4 primary--text">
-            <v-icon large class="mr-3" color="primary">mdi-clock-outline</v-icon>
-            Próximos Agendamentos
-          </v-card-title>
-          <v-list v-if="recentAppointments.length > 0" class="transparent">
-            <v-list-item 
-              v-for="appointment in recentAppointments.slice(0, 3)" 
-              :key="appointment.id" 
-              class="px-0 mb-2"
-              style="border-radius: 8px; background: #F5F5F5"
-            >
-              <v-list-item-avatar size="48">
-                <v-avatar :color="appointment.service === 'Pilates' ? 'accent' : 'success'" size="48">
-                  <v-icon color="white" size="24">
-                    {{ appointment.service === 'Pilates' ? 'mdi-yoga' : 'mdi-medical-bag' }}
-                  </v-icon>
-                </v-avatar>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="text-subtitle-1 font-weight-bold primary--text">
-                  {{ appointment.service }}
-                </v-list-item-title>
-                <v-list-item-subtitle class="text-subtitle-2">
-                  {{ appointment.client }} às {{ appointment.time }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-chip :color="getStatusColor(appointment.status)" small dark>
-                  {{ getStatusText(appointment.status) }}
-                </v-chip>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-          <v-card-text v-else class="text-center pa-8">
-            <v-icon size="64" color="primary" class="mb-4 opacity-60">mdi-calendar-blank</v-icon>
-            <p class="text-h6 primary--text">Nenhum agendamento encontrado</p>
-            <v-btn color="success" class="mt-4" @click="navigateToSchedule()">
-              <v-icon left>mdi-plus</v-icon>
-              Agendar Sessão
-            </v-btn>
-          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
