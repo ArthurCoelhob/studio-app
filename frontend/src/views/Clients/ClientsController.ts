@@ -53,6 +53,11 @@ export default class ClientsController extends Vue {
   public editingClient: Client | null = null;
   public valid = false;
   
+  // Notificações
+  public snackbar = false;
+  public snackbarText = '';
+  public snackbarColor = 'success';
+  
   // Form data
   public clientForm = {
     name: '',
@@ -73,9 +78,13 @@ export default class ClientsController extends Vue {
   ];
 
   public rules = {
-    required: (v: any) => !!v || 'Campo obrigatório',
-    email: (v: string) => /.+@.+\..+/.test(v) || 'Email inválido',
-    cpf: (v: string) => /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(v) || 'CPF inválido'
+    required: (v: any)    => !!v || 'Campo obrigatório',
+    email   : (v: string) => /.+@.+\..+/.test(v) || 'Email inválido',
+    cpf     : (v: string) => {
+      if (!v) return 'CPF é obrigatório';
+      const cleanCpf = v.replace(/\D/g, '');
+      return cleanCpf.length === 11 || 'CPF deve ter 11 dígitos';
+    }
   };
   // #endregion
 
@@ -149,7 +158,7 @@ export default class ClientsController extends Vue {
       const index = this.clients.findIndex(c => c.id === client.id);
       if (index > -1) {
         this.clients[index].active = !this.clients[index].active;
-        alert(`Cliente ${client.active ? 'inativado' : 'ativado'} com sucesso!`);
+        this.showNotification(`Cliente ${client.active ? 'inativado' : 'ativado'} com sucesso!`, 'success');
       }
     }
   }
@@ -159,9 +168,30 @@ export default class ClientsController extends Vue {
       const index = this.clients.findIndex(c => c.id === client.id);
       if (index > -1) {
         this.clients.splice(index, 1);
-        alert('Cliente excluído com sucesso!');
+        this.showNotification('Cliente excluído com sucesso!', 'success');
       }
     }
+  }
+
+  public formatCpf(): void {
+    let value = this.clientForm.cpf.replace(/\D/g, '');
+    
+    if (value.length <= 11) {
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      this.clientForm.cpf = value;
+    }
+  }
+
+  public onCpfInput(): void {
+    this.formatCpf();
+  }
+
+  public showNotification(text: string, color: string = 'success'): void {
+    this.snackbarText = text;
+    this.snackbarColor = color;
+    this.snackbar = true;
   }
   // #endregion
 
@@ -174,7 +204,7 @@ export default class ClientsController extends Vue {
         ...this.clientForm
       };
     }
-    alert('Cliente atualizado com sucesso!');
+    this.showNotification('Cliente atualizado com sucesso!', 'success');
   }
 
   private createClient(): void {
@@ -183,7 +213,7 @@ export default class ClientsController extends Vue {
       ...this.clientForm
     };
     this.clients.push(newClient);
-    alert('Cliente cadastrado com sucesso!');
+    this.showNotification('Cliente cadastrado com sucesso!', 'success');
   }
   // #endregion
 }

@@ -157,7 +157,8 @@
                   prepend-inner-icon="mdi-card-account-details"
                   outlined
                   :rules="[rules.required, rules.cpf]"
-                  v-mask="'###.###.###-##'"
+                  @input="onCpfInput"
+                  maxlength="14"
                   class="mb-4"
                 />
               </v-col>
@@ -227,6 +228,36 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar
+      v-model="snackbar"
+      :color="snackbarColor"
+      timeout="5000"
+      top
+      centered
+      min-width="400px"
+      max-width="600px"
+      elevation="8"
+      shaped
+    >
+      <div class="d-flex align-center">
+        <v-icon color="white" class="mr-3" size="24">
+          {{ snackbarColor === 'success' ? 'mdi-check-circle' : snackbarColor === 'error' ? 'mdi-alert-circle' : 'mdi-information' }}
+        </v-icon>
+        <span class="text-subtitle-1 font-weight-medium">{{ snackbarText }}</span>
+      </div>
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+          small
+        >
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </sidebar-layout>
 </template>
 

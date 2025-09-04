@@ -38,6 +38,12 @@ export default class SettingsController extends Vue {
   public serviceDialog = false;
   public professionalDialog = false;
   public scheduleDialog = false;
+  public expandedPanels = [0, 1, 2]; // Todos os painéis abertos por padrão
+  
+  // Notificações
+  public snackbar = false;
+  public snackbarText = '';
+  public snackbarColor = 'success';
   
   // Editing states
   public editingService: Service | null = null;
@@ -122,14 +128,14 @@ export default class SettingsController extends Vue {
     const index = this.services.findIndex(s => s.id === this.editingService!.id);
     if (index > -1) {
       this.services[index] = { ...this.editingService!, ...this.serviceForm };
-      alert('Serviço atualizado com sucesso!');
+      this.showNotification('Serviço atualizado com sucesso!', 'success');
     }
   }
   
   private createService(): void {
     const newService: Service = { id: Date.now(), ...this.serviceForm };
     this.services.push(newService);
-    alert('Serviço cadastrado com sucesso!');
+    this.showNotification('Serviço cadastrado com sucesso!', 'success');
   }
   
   public editService(service: Service): void {
@@ -143,7 +149,7 @@ export default class SettingsController extends Vue {
       const index = this.services.findIndex(s => s.id === service.id);
       if (index > -1) {
         this.services.splice(index, 1);
-        alert('Serviço excluído com sucesso!');
+        this.showNotification('Serviço excluído com sucesso!', 'success');
       }
     }
   }
@@ -176,14 +182,14 @@ export default class SettingsController extends Vue {
     const index = this.professionals.findIndex(p => p.id === this.editingProfessional!.id);
     if (index > -1) {
       this.professionals[index] = { ...this.editingProfessional!, ...this.professionalForm };
-      alert('Profissional atualizado com sucesso!');
+      this.showNotification('Profissional atualizado com sucesso!', 'success');
     }
   }
   
   private createProfessional(): void {
     const newProfessional: Professional = { id: Date.now(), ...this.professionalForm };
     this.professionals.push(newProfessional);
-    alert('Profissional cadastrado com sucesso!');
+    this.showNotification('Profissional cadastrado com sucesso!', 'success');
   }
   
   public editProfessional(professional: Professional): void {
@@ -197,7 +203,7 @@ export default class SettingsController extends Vue {
       const index = this.professionals.findIndex(p => p.id === professional.id);
       if (index > -1) {
         this.professionals.splice(index, 1);
-        alert('Profissional excluído com sucesso!');
+        this.showNotification('Profissional excluído com sucesso!', 'success');
       }
     }
   }
@@ -228,10 +234,16 @@ export default class SettingsController extends Vue {
         startTime: this.scheduleForm.startTime,
         endTime: this.scheduleForm.endTime
       };
-      alert('Horário atualizado com sucesso!');
+      this.showNotification('Horário atualizado com sucesso!', 'success');
     }
     
     this.closeScheduleDialog();
+  }
+
+  public showNotification(text: string, color: string = 'success'): void {
+    this.snackbarText = text;
+    this.snackbarColor = color;
+    this.snackbar = true;
   }
   // #endregion
 }
