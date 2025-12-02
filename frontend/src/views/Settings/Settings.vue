@@ -17,7 +17,7 @@
                 <v-icon color="white" size="28" class="mr-4">mdi-medical-bag</v-icon>
                 <div class="flex-grow-1">
                   <div class="text-h6 font-weight-bold">Tipos de Serviço</div>
-                  <div class="text-caption opacity-90">{{ services.length }} serviços cadastrados</div>
+                  <div class="text-caption opacity-90">{{ serviceController.services.length }} serviços cadastrados</div>
                 </div>
                 <v-btn 
                   color="white" 
@@ -33,15 +33,15 @@
             <v-expansion-panel-content>
               <v-list class="transparent pa-2">
                 <v-list-item 
-                  v-for="service in services" 
+                  v-for="service in serviceController.services" 
                   :key="service.id"
                   class="mb-2 px-4 py-3"
                   style="border-radius: 8px; background: #F8FAFC"
                 >
                   <v-list-item-avatar size="48">
-                    <v-avatar :color="service.type === 'pilates' ? 'accent' : 'success'" size="48">
+                    <v-avatar color="success" size="48">
                       <v-icon color="white" size="24">
-                        {{ service.type === 'pilates' ? 'mdi-yoga' : 'mdi-medical-bag' }}
+                        mdi-medical-bag
                       </v-icon>
                     </v-avatar>
                   </v-list-item-avatar>
@@ -50,7 +50,7 @@
                       {{ service.name }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-subtitle-2">
-                      {{ service.sessions }} sessões
+                      {{ service.sessionCount }} sessões
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -243,14 +243,14 @@
     </v-row>
 
     <!-- Dialog Tipo de Serviço -->
-    <v-dialog v-model="serviceDialog" max-width="600px" persistent>
+    <v-dialog v-model="serviceController.serviceDialog" max-width="600px" persistent>
       <v-card style="border-radius: 16px">
         <v-card-title class="success white--text pa-6">
           <v-icon left color="white" size="28">
             {{ editingService ? 'mdi-pencil' : 'mdi-plus-circle' }}
           </v-icon>
           <div class="text-h5 font-weight-bold">
-            {{ editingService ? 'Editar Serviço' : 'Novo Serviço' }}
+            {{ serviceController.editingService ? 'Editar Serviço' : 'Novo Serviço' }}
           </div>
           <v-spacer />
           <v-btn icon color="white" @click="closeServiceDialog">
@@ -259,31 +259,23 @@
         </v-card-title>
         
         <v-card-text class="pa-6">
-          <v-form ref="serviceForm" v-model="serviceValid">
+          <v-form ref="serviceForm" v-model="serviceController.serviceValid">
             <v-text-field
-              v-model="serviceForm.name"
+              v-model="serviceController.serviceForm.name"
               label="Nome do Serviço"
               prepend-inner-icon="mdi-medical-bag"
               outlined
-              :rules="[rules.required]"
+              :rules="[serviceController.rules.required]"
               class="mb-4"
             />
-            <v-select
-              v-model="serviceForm.type"
-              :items="serviceTypes"
-              label="Tipo de Serviço"
-              prepend-inner-icon="mdi-format-list-bulleted"
-              outlined
-              :rules="[rules.required]"
-              class="mb-4"
-            />
+
             <v-text-field
-              v-model="serviceForm.sessions"
+              v-model="serviceController.serviceForm.sessionCount"
               label="Quantidade de Sessões"
               prepend-inner-icon="mdi-counter"
               outlined
               type="number"
-              :rules="[rules.required]"
+              :rules="[serviceController.rules.required]"
               class="mb-4"
             />
           </v-form>
@@ -294,9 +286,9 @@
             Cancelar
           </v-btn>
           <v-spacer />
-          <v-btn color="success" :disabled="!serviceValid" @click="saveService">
+          <v-btn color="success" :disabled="!serviceController.serviceValid" @click="saveService">
             <v-icon left>mdi-check</v-icon>
-            {{ editingService ? 'Salvar Alterações' : 'Cadastrar Serviço' }}
+            {{ serviceController.editingService ? 'Salvar Alterações' : 'Cadastrar Serviço' }}
           </v-btn>
         </v-card-actions>
       </v-card>

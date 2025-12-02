@@ -1,13 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Professional } from '@/types';
-import { MockService } from '@/services/mockService';
-
-interface Service {
-  id: number
-  name: string
-  type: 'pilates' | 'fisioterapia'
-  sessions: number
-}
+import ServiceController from './ServiceController';
 
 interface Schedule {
   id: number
@@ -21,11 +14,7 @@ interface Schedule {
 export default class SettingsController extends Vue {
   // #region DATA
   public professionals: Professional[] = [];
-  public services: Service[] = [
-    { id: 1, name: 'Pilates Clássico', type: 'pilates', sessions: 12 },
-    { id: 2, name: 'Fisioterapia Ortopédica', type: 'fisioterapia', sessions: 10 },
-    { id: 3, name: 'Pilates Funcional', type: 'pilates', sessions: 8 },
-  ];
+
   public schedules: Schedule[] = [
     { id: 1, name: 'Segunda a Sexta', type: 'weekday', startTime: '08:00', endTime: '18:00' },
     { id: 2, name: 'Sábado', type: 'weekend', startTime: '08:00', endTime: '12:00' },
@@ -35,7 +24,6 @@ export default class SettingsController extends Vue {
   public sessionDuration = 60;
   
   // Dialog states
-  public serviceDialog = false;
   public professionalDialog = false;
   public scheduleDialog = false;
   public expandedPanels = [0, 1, 2]; // Todos os painéis abertos por padrão
@@ -46,21 +34,14 @@ export default class SettingsController extends Vue {
   public snackbarColor = 'success';
   
   // Editing states
-  public editingService: Service | null = null;
   public editingProfessional: Professional | null = null;
   public editingSchedule: Schedule | null = null;
   
   // Form validation
-  public serviceValid = false;
   public professionalValid = false;
   public scheduleValid = false;
   
   // Form data
-  public serviceForm = {
-    name: '',
-    type: 'pilates' as 'pilates' | 'fisioterapia',
-    sessions: 1,
-  };
   
   public professionalForm = {
     name: '',
@@ -74,10 +55,7 @@ export default class SettingsController extends Vue {
   };
   
   // Options
-  public serviceTypes = [
-    { text: 'Pilates', value: 'pilates' },
-    { text: 'Fisioterapia', value: 'fisioterapia' },
-  ];
+
   
   public specialties = [
     { text: 'Pilates', value: 'pilates' },
@@ -89,69 +67,36 @@ export default class SettingsController extends Vue {
   };
   // #endregion
 
+  // Service Controller
+  public serviceController = new ServiceController();
+
   // #region LIFECYCLE
   public async mounted(): Promise<void> {
-    await this.loadProfessionals();
-  }
-  
-  // Private methods
-  private async loadProfessionals(): Promise<void> {
-    this.professionals = await MockService.getProfessionals();
+    this.serviceController.$on('show-notification', this.showNotification);
+    await this.serviceController.loadServices();
   }
   // #endregion
   
   // #region METHODS
+  // Service methods - delegated to ServiceController
   public openServiceDialog(): void {
-    this.editingService = null;
-    this.serviceForm = { name: '', type: 'pilates', sessions: 1 };
-    this.serviceDialog = true;
+    this.serviceController.openServiceDialog();
   }
   
   public closeServiceDialog(): void {
-    this.serviceDialog = false;
-    this.editingService = null;
+    this.serviceController.closeServiceDialog();
   }
   
   public saveService(): void {
-    if (!this.serviceValid) return;
-    
-    if (this.editingService) {
-      this.updateService();
-    } else {
-      this.createService();
-    }
-    
-    this.closeServiceDialog();
+    this.serviceController.saveService();
   }
   
-  private updateService(): void {
-    const index = this.services.findIndex(s => s.id === this.editingService!.id);
-    if (index > -1) {
-      this.services[index] = { ...this.editingService!, ...this.serviceForm };
-      this.showNotification('Serviço atualizado com sucesso!', 'success');
-    }
+  public editService(service: any): void {
+    this.serviceController.editService(service);
   }
   
-  private createService(): void {
-    const newService: Service = { id: Date.now(), ...this.serviceForm };
-    this.services.push(newService);
-    this.showNotification('Serviço cadastrado com sucesso!', 'success');
-  }
-  
-  public editService(service: Service): void {
-    this.editingService = service;
-    this.serviceForm = { name: service.name, type: service.type, sessions: service.sessions };
-    this.serviceDialog = true;
-  }
-  
-  public deleteService(service: Service): void {
-    if (confirm(`Tem certeza que deseja excluir o serviço ${service.name}?`)) {
-      const index = this.services.findIndex(s => s.id === service.id);
-      if (index > -1) {
-        this.services.splice(index, 1);
-        this.showNotification('Serviço excluído com sucesso!', 'success');
-      }
-    }
+  public deleteService(service: any): void {
+    this.serviceController.deleteService(service);
   }
   
   // Professional methods

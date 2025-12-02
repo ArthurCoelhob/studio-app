@@ -79,36 +79,36 @@ export default class HomeController extends Vue {
   public getStatusColor(status: string): string {
     switch (status) {
       case 'confirmed': return 'success';
-      case 'pending': return 'warning';
+      case 'pending'  : return 'warning';
       case 'cancelled': return 'error';
-      default: return 'primary';
+      default         : return 'primary';
     }
   }
 
   public getStatusText(status: string): string {
     switch (status) {
       case 'confirmed': return 'Confirmado';
-      case 'pending': return 'Pendente';
+      case 'pending'  : return 'Pendente';
       case 'cancelled': return 'Cancelado';
-      default: return 'Agendado';
+      default         : return 'Agendado';
     }
   }
 
   public getNotificationIcon(type: string): string {
     switch (type) {
       case 'appointment': return 'mdi-calendar-check';
-      case 'payment': return 'mdi-cash';
-      case 'reminder': return 'mdi-bell-ring';
-      default: return 'mdi-information';
+      case 'payment'    : return 'mdi-cash';
+      case 'reminder'   : return 'mdi-bell-ring';
+      default           : return 'mdi-information';
     }
   }
 
   public getNotificationColor(type: string): string {
     switch (type) {
       case 'appointment': return 'primary';
-      case 'payment': return 'success';
-      case 'reminder': return 'warning';
-      default: return 'info';
+      case 'payment'    : return 'success';
+      case 'reminder'   : return 'warning';
+      default           : return 'info';
     }
   }
   // #endregion
