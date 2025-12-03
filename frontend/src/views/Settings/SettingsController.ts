@@ -1,6 +1,6 @@
 import { Component, Vue } from 'vue-property-decorator';
-import { Professional } from '@/types';
 import ServiceController from './ServiceController';
+import ProfessionalController from './ProfessionalController';
 
 interface Schedule {
   id: number
@@ -13,7 +13,7 @@ interface Schedule {
 @Component
 export default class SettingsController extends Vue {
   // #region DATA
-  public professionals: Professional[] = [];
+
 
   public schedules: Schedule[] = [
     { id: 1, name: 'Segunda a Sexta', type: 'weekday', startTime: '08:00', endTime: '18:00' },
@@ -24,7 +24,6 @@ export default class SettingsController extends Vue {
   public sessionDuration = 60;
   
   // Dialog states
-  public professionalDialog = false;
   public scheduleDialog = false;
   public expandedPanels = [0, 1, 2]; // Todos os painéis abertos por padrão
   
@@ -34,19 +33,12 @@ export default class SettingsController extends Vue {
   public snackbarColor = 'success';
   
   // Editing states
-  public editingProfessional: Professional | null = null;
   public editingSchedule: Schedule | null = null;
   
   // Form validation
-  public professionalValid = false;
   public scheduleValid = false;
   
   // Form data
-  
-  public professionalForm = {
-    name: '',
-    specialty: 'pilates' as 'pilates' | 'fisioterapia',
-  };
   
   public scheduleForm = {
     name: '',
@@ -57,23 +49,25 @@ export default class SettingsController extends Vue {
   // Options
 
   
-  public specialties = [
-    { text: 'Pilates', value: 'pilates' },
-    { text: 'Fisioterapia', value: 'fisioterapia' },
-  ];
+
   
   public rules = {
     required: (v: any) => !!v || 'Campo obrigatório'
   };
   // #endregion
 
-  // Service Controller
+  // Controllers
   public serviceController = new ServiceController();
+  public professionalController = new ProfessionalController();
 
   // #region LIFECYCLE
   public async mounted(): Promise<void> {
     this.serviceController.$on('show-notification', this.showNotification);
+    this.professionalController.$on('show-notification', this.showNotification);
+    
     await this.serviceController.loadServices();
+    await this.professionalController.loadServiceTypes();
+    await this.professionalController.loadProfessionals();
   }
   // #endregion
   
@@ -99,58 +93,25 @@ export default class SettingsController extends Vue {
     this.serviceController.deleteService(service);
   }
   
-  // Professional methods
+  // Professional methods - delegated to ProfessionalController
   public openProfessionalDialog(): void {
-    this.editingProfessional = null;
-    this.professionalForm = { name: '', specialty: 'pilates' };
-    this.professionalDialog = true;
+    this.professionalController.openProfessionalDialog();
   }
   
   public closeProfessionalDialog(): void {
-    this.professionalDialog = false;
-    this.editingProfessional = null;
+    this.professionalController.closeProfessionalDialog();
   }
   
   public saveProfessional(): void {
-    if (!this.professionalValid) return;
-    
-    if (this.editingProfessional) {
-      this.updateProfessional();
-    } else {
-      this.createProfessional();
-    }
-    
-    this.closeProfessionalDialog();
+    this.professionalController.saveProfessional();
   }
   
-  private updateProfessional(): void {
-    const index = this.professionals.findIndex(p => p.id === this.editingProfessional!.id);
-    if (index > -1) {
-      this.professionals[index] = { ...this.editingProfessional!, ...this.professionalForm };
-      this.showNotification('Profissional atualizado com sucesso!', 'success');
-    }
+  public editProfessional(professional: any): void {
+    this.professionalController.editProfessional(professional);
   }
   
-  private createProfessional(): void {
-    const newProfessional: Professional = { id: Date.now(), ...this.professionalForm };
-    this.professionals.push(newProfessional);
-    this.showNotification('Profissional cadastrado com sucesso!', 'success');
-  }
-  
-  public editProfessional(professional: Professional): void {
-    this.editingProfessional = professional;
-    this.professionalForm = { name: professional.name, specialty: professional.specialty };
-    this.professionalDialog = true;
-  }
-  
-  public deleteProfessional(professional: Professional): void {
-    if (confirm(`Tem certeza que deseja excluir o profissional ${professional.name}?`)) {
-      const index = this.professionals.findIndex(p => p.id === professional.id);
-      if (index > -1) {
-        this.professionals.splice(index, 1);
-        this.showNotification('Profissional excluído com sucesso!', 'success');
-      }
-    }
+  public deleteProfessional(professional: any): void {
+    this.professionalController.deleteProfessional(professional);
   }
   
   // Schedule methods

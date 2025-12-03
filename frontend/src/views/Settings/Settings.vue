@@ -88,7 +88,7 @@
                 <v-icon color="white" size="28" class="mr-4">mdi-account-group</v-icon>
                 <div class="flex-grow-1">
                   <div class="text-h6 font-weight-bold">Profissionais</div>
-                  <div class="text-caption opacity-90">{{ professionals.length }} profissionais cadastrados</div>
+                  <div class="text-caption opacity-90">{{ professionalController.professionals.length }} profissionais cadastrados</div>
                 </div>
                 <v-btn 
                   color="white" 
@@ -104,15 +104,15 @@
             <v-expansion-panel-content>
               <v-list class="transparent pa-2">
                 <v-list-item 
-                  v-for="professional in professionals" 
+                  v-for="professional in professionalController.professionals" 
                   :key="professional.id"
                   class="mb-2 px-4 py-3"
                   style="border-radius: 8px; background: #F8FAFC"
                 >
                   <v-list-item-avatar size="48">
-                    <v-avatar :color="professional.specialty === 'pilates' ? 'accent' : 'success'" size="48">
+                    <v-avatar :color="professional.profile === 'admin' ? 'primary' : 'success'" size="48">
                       <v-icon color="white" size="24">
-                        {{ professional.specialty === 'pilates' ? 'mdi-yoga' : 'mdi-medical-bag' }}
+                        {{ professional.profile === 'admin' ? 'mdi-account-star' : 'mdi-account' }}
                       </v-icon>
                     </v-avatar>
                   </v-list-item-avatar>
@@ -121,7 +121,7 @@
                       {{ professional.name }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-subtitle-2">
-                      {{ professional.specialty === 'pilates' ? 'Pilates' : 'Fisioterapia' }}
+                      {{ professionalController.getProfileText(professional.profile) }} - {{ professionalController.getServiceTypeName(professional.serviceTypeId) }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -243,103 +243,203 @@
     </v-row>
 
     <!-- Dialog Tipo de Serviço -->
-    <v-dialog v-model="serviceController.serviceDialog" max-width="600px" persistent>
-      <v-card style="border-radius: 16px">
-        <v-card-title class="success white--text pa-6">
-          <v-icon left color="white" size="28">
-            {{ editingService ? 'mdi-pencil' : 'mdi-plus-circle' }}
-          </v-icon>
-          <div class="text-h5 font-weight-bold">
-            {{ serviceController.editingService ? 'Editar Serviço' : 'Novo Serviço' }}
+    <v-dialog v-model="serviceController.serviceDialog" max-width="700px" persistent>
+      <v-card class="service-dialog" elevation="24">
+        <!-- Header Gradient -->
+        <div class="dialog-header service-header">
+          <div class="header-content">
+            <div class="header-icon">
+              <v-avatar size="56" :color="serviceController.editingService ? 'warning' : 'success'" class="elevation-4">
+                <v-icon size="28" color="white">
+                  {{ serviceController.editingService ? 'mdi-pencil' : 'mdi-plus-circle' }}
+                </v-icon>
+              </v-avatar>
+            </div>
+            <div class="header-text">
+              <h2 class="text-h5 font-weight-bold white--text mb-1">
+                {{ serviceController.editingService ? 'Editar Serviço' : 'Novo Serviço' }}
+              </h2>
+              <p class="text-subtitle-1 white--text opacity-90 mb-0">
+                {{ serviceController.editingService ? 'Modifique os dados do serviço' : 'Preencha os dados para o novo serviço' }}
+              </p>
+            </div>
+            <v-btn icon color="white" @click="closeServiceDialog" class="ml-auto">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </div>
-          <v-spacer />
-          <v-btn icon color="white" @click="closeServiceDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
+        </div>
         
-        <v-card-text class="pa-6">
+        <!-- Form Content -->
+        <v-card-text class="pa-8">
           <v-form ref="serviceForm" v-model="serviceController.serviceValid">
-            <v-text-field
-              v-model="serviceController.serviceForm.name"
-              label="Nome do Serviço"
-              prepend-inner-icon="mdi-medical-bag"
-              outlined
-              :rules="[serviceController.rules.required]"
-              class="mb-4"
-            />
-
-            <v-text-field
-              v-model="serviceController.serviceForm.sessionCount"
-              label="Quantidade de Sessões"
-              prepend-inner-icon="mdi-counter"
-              outlined
-              type="number"
-              :rules="[serviceController.rules.required]"
-              class="mb-4"
-            />
+            <!-- Dados do Serviço Section -->
+            <div class="form-section mb-6">
+              <h3 class="section-title">
+                <v-icon color="success" class="mr-2">mdi-medical-bag</v-icon>
+                Dados do Serviço
+              </h3>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="serviceController.serviceForm.name"
+                    label="Nome do Serviço"
+                    prepend-inner-icon="mdi-medical-bag"
+                    outlined
+                    dense
+                    :rules="[serviceController.rules.required]"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="serviceController.serviceForm.sessionCount"
+                    label="Quantidade de Sessões"
+                    prepend-inner-icon="mdi-counter"
+                    outlined
+                    dense
+                    type="number"
+                    :rules="[serviceController.rules.required]"
+                  />
+                </v-col>
+              </v-row>
+            </div>
           </v-form>
         </v-card-text>
         
-        <v-card-actions class="pa-6 pt-0">
-          <v-btn text color="orange" @click="closeServiceDialog">
+        <!-- Actions -->
+        <v-card-actions class="pa-8 pt-0">
+          <v-btn 
+            text 
+            color="grey" 
+            @click="closeServiceDialog"
+            class="px-6"
+          >
+            <v-icon left>mdi-close</v-icon>
             Cancelar
           </v-btn>
           <v-spacer />
-          <v-btn color="success" :disabled="!serviceController.serviceValid" @click="saveService">
-            <v-icon left>mdi-check</v-icon>
-            {{ serviceController.editingService ? 'Salvar Alterações' : 'Cadastrar Serviço' }}
+          <v-btn 
+            :color="serviceController.editingService ? 'warning' : 'success'" 
+            :disabled="!serviceController.serviceValid" 
+            @click="saveService"
+            class="px-8 py-2"
+            elevation="2"
+          >
+            <v-icon left>{{ serviceController.editingService ? 'mdi-content-save' : 'mdi-plus' }}</v-icon>
+            {{ serviceController.editingService ? 'Salvar Alterações' : 'Criar Serviço' }}
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <!-- Dialog Profissional -->
-    <v-dialog v-model="professionalDialog" max-width="600px" persistent>
-      <v-card style="border-radius: 16px">
-        <v-card-title class="primary white--text pa-6">
-          <v-icon left color="white" size="28">
-            {{ editingProfessional ? 'mdi-pencil' : 'mdi-account-plus' }}
-          </v-icon>
-          <div class="text-h5 font-weight-bold">
-            {{ editingProfessional ? 'Editar Profissional' : 'Novo Profissional' }}
+    <v-dialog v-model="professionalController.professionalDialog" max-width="700px" persistent>
+      <v-card class="professional-dialog" elevation="24">
+        <!-- Header Gradient -->
+        <div class="dialog-header professional-header">
+          <div class="header-content">
+            <div class="header-icon">
+              <v-avatar size="56" :color="professionalController.editingProfessional ? 'warning' : 'primary'" class="elevation-4">
+                <v-icon size="28" color="white">
+                  {{ professionalController.editingProfessional ? 'mdi-pencil' : 'mdi-account-plus' }}
+                </v-icon>
+              </v-avatar>
+            </div>
+            <div class="header-text">
+              <h2 class="text-h5 font-weight-bold white--text mb-1">
+                {{ professionalController.editingProfessional ? 'Editar Profissional' : 'Novo Profissional' }}
+              </h2>
+              <p class="text-subtitle-1 white--text opacity-90 mb-0">
+                {{ professionalController.editingProfessional ? 'Modifique os dados do profissional' : 'Preencha os dados para o novo profissional' }}
+              </p>
+            </div>
+            <v-btn icon color="white" @click="closeProfessionalDialog" class="ml-auto">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </div>
-          <v-spacer />
-          <v-btn icon color="white" @click="closeProfessionalDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
+        </div>
         
-        <v-card-text class="pa-6">
-          <v-form ref="professionalForm" v-model="professionalValid">
-            <v-text-field
-              v-model="professionalForm.name"
-              label="Nome Completo"
-              prepend-inner-icon="mdi-account"
-              outlined
-              :rules="[rules.required]"
-              class="mb-4"
-            />
-            <v-select
-              v-model="professionalForm.specialty"
-              :items="specialties"
-              label="Especialidade"
-              prepend-inner-icon="mdi-medical-bag"
-              outlined
-              :rules="[rules.required]"
-              class="mb-4"
-            />
+        <!-- Form Content -->
+        <v-card-text class="pa-8">
+          <v-form ref="professionalForm" v-model="professionalController.professionalValid">
+            <!-- Dados Pessoais Section -->
+            <div class="form-section mb-6">
+              <h3 class="section-title">
+                <v-icon color="primary" class="mr-2">mdi-account-circle</v-icon>
+                Dados Pessoais
+              </h3>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="professionalController.professionalForm.name"
+                    label="Nome Completo"
+                    prepend-inner-icon="mdi-account"
+                    outlined
+                    dense
+                    :rules="[professionalController.rules.required]"
+                  />
+                </v-col>
+              </v-row>
+            </div>
+
+            <!-- Configurações Profissionais Section -->
+            <div class="form-section mb-6">
+              <h3 class="section-title">
+                <v-icon color="primary" class="mr-2">mdi-briefcase</v-icon>
+                Configurações Profissionais
+              </h3>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-select
+                    v-model="professionalController.professionalForm.serviceTypeId"
+                    :items="professionalController.serviceTypes"
+                    item-text="name"
+                    item-value="id"
+                    label="Tipo de Serviço"
+                    prepend-inner-icon="mdi-medical-bag"
+                    outlined
+                    dense
+                    :rules="[professionalController.rules.required]"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-select
+                    v-model="professionalController.professionalForm.profile"
+                    :items="professionalController.profileOptions"
+                    item-text="text"
+                    item-value="value"
+                    label="Perfil"
+                    prepend-inner-icon="mdi-account-star"
+                    outlined
+                    dense
+                    :rules="[professionalController.rules.required]"
+                  />
+                </v-col>
+              </v-row>
+            </div>
           </v-form>
         </v-card-text>
         
-        <v-card-actions class="pa-6 pt-0">
-          <v-btn text color="orange" @click="closeProfessionalDialog">
+        <!-- Actions -->
+        <v-card-actions class="pa-8 pt-0">
+          <v-btn 
+            text 
+            color="grey" 
+            @click="closeProfessionalDialog"
+            class="px-6"
+          >
+            <v-icon left>mdi-close</v-icon>
             Cancelar
           </v-btn>
           <v-spacer />
-          <v-btn color="primary" :disabled="!professionalValid" @click="saveProfessional">
-            <v-icon left>mdi-check</v-icon>
-            {{ editingProfessional ? 'Salvar Alterações' : 'Cadastrar Profissional' }}
+          <v-btn 
+            :color="professionalController.editingProfessional ? 'warning' : 'primary'" 
+            :disabled="!professionalController.professionalValid" 
+            @click="saveProfessional"
+            class="px-8 py-2"
+            elevation="2"
+          >
+            <v-icon left>{{ professionalController.editingProfessional ? 'mdi-content-save' : 'mdi-plus' }}</v-icon>
+            {{ professionalController.editingProfessional ? 'Salvar Alterações' : 'Criar Profissional' }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -407,6 +507,74 @@
       </v-card>
     </v-dialog>
 
+    <!-- Dialog Confirmar Exclusão Serviço -->
+    <v-dialog v-model="serviceController.deleteDialog" max-width="400px" persistent>
+      <v-card style="border-radius: 16px">
+        <v-card-title class="error white--text pa-6">
+          <v-icon left color="white" size="28">mdi-delete-alert</v-icon>
+          <div class="text-h6 font-weight-bold">Confirmar Exclusão</div>
+        </v-card-title>
+        
+        <v-card-text class="pa-6">
+          <div class="text-center">
+            <v-icon color="error" size="64" class="mb-4">mdi-delete-circle</v-icon>
+            <div class="text-h6 mb-2">Tem certeza?</div>
+            <div class="text-body-1">
+              Deseja excluir o serviço <strong>{{ serviceController.deletingService && serviceController.deletingService.name }}</strong>?
+            </div>
+            <div class="text-caption mt-2 error--text">
+              Esta ação não pode ser desfeita.
+            </div>
+          </div>
+        </v-card-text>
+        
+        <v-card-actions class="pa-6 pt-0">
+          <v-btn text @click="serviceController.closeDeleteDialog()">
+            Cancelar
+          </v-btn>
+          <v-spacer />
+          <v-btn color="error" @click="serviceController.confirmDelete()">
+            <v-icon left>mdi-delete</v-icon>
+            Excluir
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Dialog Confirmar Exclusão Profissional -->
+    <v-dialog v-model="professionalController.deleteDialog" max-width="400px" persistent>
+      <v-card style="border-radius: 16px">
+        <v-card-title class="error white--text pa-6">
+          <v-icon left color="white" size="28">mdi-delete-alert</v-icon>
+          <div class="text-h6 font-weight-bold">Confirmar Exclusão</div>
+        </v-card-title>
+        
+        <v-card-text class="pa-6">
+          <div class="text-center">
+            <v-icon color="error" size="64" class="mb-4">mdi-delete-circle</v-icon>
+            <div class="text-h6 mb-2">Tem certeza?</div>
+            <div class="text-body-1">
+              Deseja excluir o profissional <strong>{{ professionalController.deletingProfessional && professionalController.deletingProfessional.name }}</strong>?
+            </div>
+            <div class="text-caption mt-2 error--text">
+              Esta ação não pode ser desfeita.
+            </div>
+          </div>
+        </v-card-text>
+        
+        <v-card-actions class="pa-6 pt-0">
+          <v-btn text @click="professionalController.closeDeleteDialog()">
+            Cancelar
+          </v-btn>
+          <v-spacer />
+          <v-btn color="error" @click="professionalController.confirmDelete()">
+            <v-icon left>mdi-delete</v-icon>
+            Excluir
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar
       v-model="snackbar"
       :color="snackbarColor"
@@ -449,3 +617,66 @@ export default SettingsController.extend({
   }
 })
 </script>
+
+<style scoped>
+/* Dialog Styles */
+.service-dialog,
+.professional-dialog {
+  border-radius: 20px !important;
+  overflow: hidden;
+}
+
+.dialog-header {
+  padding: 24px;
+}
+
+.service-header {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+}
+
+.professional-header {
+  background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  flex-shrink: 0;
+}
+
+.header-text {
+  flex-grow: 1;
+}
+
+.form-section {
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .dialog-header {
+    padding: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}
+</style>

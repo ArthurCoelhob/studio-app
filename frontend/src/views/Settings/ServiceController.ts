@@ -12,7 +12,9 @@ export default class ServiceController extends Vue {
   // #region DATA
   public services: Service[] = [];
   public serviceDialog = false;
+  public deleteDialog = false;
   public editingService: Service | null = null;
+  public deletingService: Service | null = null;
   public serviceValid = false;
   
   public serviceForm = {
@@ -60,7 +62,11 @@ export default class ServiceController extends Vue {
   
   private async updateService(): Promise<void> {
     try {
-      await ServiceTypeService.update(this.editingService!.id!, this.serviceForm);
+      const formData = {
+        name: this.serviceForm.name,
+        sessionCount: Number(this.serviceForm.sessionCount)
+      };
+      await ServiceTypeService.update(this.editingService!.id!, formData);
       await this.loadServices();
       this.$emit('show-notification', 'Serviço atualizado com sucesso!', 'success');
     } catch (error) {
@@ -71,7 +77,11 @@ export default class ServiceController extends Vue {
   
   private async createService(): Promise<void> {
     try {
-      await ServiceTypeService.create(this.serviceForm);
+      const formData = {
+        name: this.serviceForm.name,
+        sessionCount: Number(this.serviceForm.sessionCount)
+      };
+      await ServiceTypeService.create(formData);
       await this.loadServices();
       this.$emit('show-notification', 'Serviço cadastrado com sucesso!', 'success');
     } catch (error) {
@@ -86,17 +96,29 @@ export default class ServiceController extends Vue {
     this.serviceDialog = true;
   }
   
-  public async deleteService(service: Service): Promise<void> {
-    if (confirm(`Tem certeza que deseja excluir o serviço ${service.name}?`)) {
-      try {
-        await ServiceTypeService.delete(service.id!);
-        await this.loadServices();
-        this.$emit('show-notification', 'Serviço excluído com sucesso!', 'success');
-      } catch (error) {
-        console.error('Erro ao excluir serviço:', error);
-        this.$emit('show-notification', 'Erro ao excluir serviço', 'error');
-      }
+  public deleteService(service: Service): void {
+    this.deletingService = service;
+    this.deleteDialog = true;
+  }
+
+  public closeDeleteDialog(): void {
+    this.deleteDialog = false;
+    this.deletingService = null;
+  }
+
+  public async confirmDelete(): Promise<void> {
+    if (!this.deletingService) return;
+    
+    try {
+      await ServiceTypeService.delete(this.deletingService.id!);
+      await this.loadServices();
+      this.$emit('show-notification', 'Serviço excluído com sucesso!', 'success');
+    } catch (error) {
+      console.error('Erro ao excluir serviço:', error);
+      this.$emit('show-notification', 'Erro ao excluir serviço', 'error');
     }
+    
+    this.closeDeleteDialog();
   }
   // #endregion
 }
