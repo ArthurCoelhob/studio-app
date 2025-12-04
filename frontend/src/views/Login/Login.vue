@@ -59,7 +59,7 @@ export default LoginController
 
 <style scoped>
 .login-container {
-  background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%);
+  background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
   min-height: 100vh;
 }
 </style>

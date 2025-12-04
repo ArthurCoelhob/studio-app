@@ -3,7 +3,7 @@
     <v-row class="mb-6">
       <v-col cols="12">
         <h1 class="text-h3 primary--text mb-2">Agenda</h1>
-        <p class="text-subtitle-1 orange--text">Gerencie os agendamentos da semana</p>
+        <p class="text-subtitle-1 secondary--text">Gerencie os agendamentos da semana</p>
       </v-col>
     </v-row>
 
@@ -144,7 +144,7 @@
         <div class="dialog-header">
           <div class="header-content">
             <div class="header-icon">
-              <v-avatar size="56" :color="editingAppointment ? 'warning' : 'success'" class="elevation-4">
+              <v-avatar size="56" :color="editingAppointment ? 'warning' : 'primary'" class="elevation-4">
                 <v-icon size="28" color="white">
                   {{ editingAppointment ? 'mdi-pencil' : 'mdi-calendar-plus' }}
                 </v-icon>
@@ -299,7 +299,7 @@
           </v-btn>
           <v-spacer />
           <v-btn 
-            :color="editingAppointment ? 'warning' : 'success'" 
+            :color="editingAppointment ? 'warning' : 'primary'" 
             :disabled="!appointmentValid" 
             @click="saveAppointment"
             class="px-8 py-2"
@@ -426,8 +426,8 @@ export default class Schedule extends ScheduleController {
 }
 
 .day-header.today {
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: #e0f2f1;
+  color: #00695c;
   font-weight: bold;
 }
 
@@ -493,8 +493,8 @@ export default class Schedule extends ScheduleController {
 }
 
 .appointment-card.status-scheduled {
-  background-color: #e3f2fd;
-  border-left: 4px solid #2196f3;
+  background-color: #e0f2f1;
+  border-left: 4px solid #00695c;
 }
 
 .appointment-card.status-confirmed {
@@ -549,7 +549,7 @@ export default class Schedule extends ScheduleController {
 }
 
 .dialog-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
   padding: 24px;
 }
 

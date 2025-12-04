@@ -3,7 +3,7 @@
     <v-row class="mb-6">
       <v-col cols="12">
         <h1 class="text-h3 primary--text mb-2">Parametrizações</h1>
-        <p class="text-subtitle-1 orange--text">Configure as opções do sistema</p>
+        <p class="text-subtitle-1 secondary--text">Configure as opções do sistema</p>
       </v-col>
     </v-row>
 
@@ -12,7 +12,7 @@
         <v-expansion-panels v-model="expandedPanels" multiple class="mb-4">
           <!-- Tipos de Serviço -->
           <v-expansion-panel>
-            <v-expansion-panel-header class="success white--text pa-4" style="min-height: 80px">
+            <v-expansion-panel-header class="primary white--text pa-4" style="min-height: 80px">
               <div class="d-flex align-center w-100">
                 <v-icon color="white" size="28" class="mr-4">mdi-medical-bag</v-icon>
                 <div class="flex-grow-1">
@@ -21,7 +21,7 @@
                 </div>
                 <v-btn 
                   color="white" 
-                  class="success--text mr-4" 
+                  class="primary--text mr-4" 
                   @click.stop="openServiceDialog"
                   small
                 >
@@ -39,7 +39,7 @@
                   style="border-radius: 8px; background: #F8FAFC"
                 >
                   <v-list-item-avatar size="48">
-                    <v-avatar color="success" size="48">
+                    <v-avatar color="primary" size="48">
                       <v-icon color="white" size="24">
                         mdi-medical-bag
                       </v-icon>
@@ -63,7 +63,7 @@
                       <v-list>
                         <v-list-item @click="editService(service)">
                           <v-list-item-icon>
-                            <v-icon color="accent">mdi-pencil</v-icon>
+                            <v-icon color="primary">mdi-pencil</v-icon>
                           </v-list-item-icon>
                           <v-list-item-title>Editar</v-list-item-title>
                         </v-list-item>
@@ -83,7 +83,7 @@
 
           <!-- Profissionais -->
           <v-expansion-panel>
-            <v-expansion-panel-header class="primary white--text pa-4" style="min-height: 80px">
+            <v-expansion-panel-header class="cyan darken-3 white--text pa-4" style="min-height: 80px">
               <div class="d-flex align-center w-100">
                 <v-icon color="white" size="28" class="mr-4">mdi-account-group</v-icon>
                 <div class="flex-grow-1">
@@ -92,7 +92,7 @@
                 </div>
                 <v-btn 
                   color="white" 
-                  class="primary--text mr-4" 
+                  class="cyan--text text--darken-3 mr-4" 
                   @click.stop="openProfessionalDialog"
                   small
                 >
@@ -110,14 +110,14 @@
                   style="border-radius: 8px; background: #F8FAFC"
                 >
                   <v-list-item-avatar size="48">
-                    <v-avatar :color="professional.profile === 'admin' ? 'primary' : 'success'" size="48">
+                    <v-avatar :color="professional.profile === 'admin' ? 'cyan darken-4' : 'cyan darken-3'" size="48">
                       <v-icon color="white" size="24">
                         {{ professional.profile === 'admin' ? 'mdi-account-star' : 'mdi-account' }}
                       </v-icon>
                     </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title class="text-subtitle-1 font-weight-bold primary--text">
+                    <v-list-item-title class="text-subtitle-1 font-weight-bold cyan--text text--darken-3">
                       {{ professional.name }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-subtitle-2">
@@ -127,14 +127,14 @@
                   <v-list-item-action>
                     <v-menu offset-y>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on" color="primary">
+                        <v-btn icon v-bind="attrs" v-on="on" color="cyan darken-3">
                           <v-icon>mdi-dots-vertical</v-icon>
                         </v-btn>
                       </template>
                       <v-list>
                         <v-list-item @click="editProfessional(professional)">
                           <v-list-item-icon>
-                            <v-icon color="accent">mdi-pencil</v-icon>
+                            <v-icon color="cyan darken-3">mdi-pencil</v-icon>
                           </v-list-item-icon>
                           <v-list-item-title>Editar</v-list-item-title>
                         </v-list-item>
@@ -153,7 +153,7 @@
           </v-expansion-panel>
           <!-- Horários de Funcionamento -->
           <v-expansion-panel>
-            <v-expansion-panel-header class="accent white--text pa-4" style="min-height: 80px">
+            <v-expansion-panel-header class="teal lighten-2 white--text pa-4" style="min-height: 80px">
               <div class="d-flex align-center w-100">
                 <v-icon color="white" size="28" class="mr-4">mdi-clock</v-icon>
                 <div class="flex-grow-1">
@@ -171,14 +171,14 @@
                   style="border-radius: 8px; background: #F8FAFC"
                 >
                   <v-list-item-avatar>
-                    <v-avatar :color="schedule.type === 'weekday' ? 'primary' : 'success'" size="40">
+                    <v-avatar :color="schedule.type === 'weekday' ? 'teal' : 'teal lighten-2'" size="40">
                       <v-icon color="white" size="20">
                         {{ schedule.type === 'weekday' ? 'mdi-calendar-week' : 'mdi-calendar-weekend' }}
                       </v-icon>
                     </v-avatar>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title class="text-subtitle-1 font-weight-bold primary--text">
+                    <v-list-item-title class="text-subtitle-1 font-weight-bold teal--text">
                       {{ schedule.name }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-subtitle-2">
@@ -186,7 +186,7 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn icon color="accent" @click="editSchedule(schedule)">
+                    <v-btn icon color="teal lighten-2" @click="editSchedule(schedule)">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </v-list-item-action>
@@ -197,7 +197,7 @@
 
           <!-- Configurações Gerais -->
           <v-expansion-panel>
-            <v-expansion-panel-header class="orange white--text pa-4" style="min-height: 80px">
+            <v-expansion-panel-header class="blue-grey darken-1 white--text pa-4" style="min-height: 80px">
               <div class="d-flex align-center w-100">
                 <v-icon color="white" size="28" class="mr-4">mdi-cog</v-icon>
                 <div class="flex-grow-1">
@@ -212,13 +212,13 @@
                   <v-switch
                     v-model="notifications"
                     label="Notificações por email"
-                    color="primary"
+                    color="blue-grey darken-1"
                     class="mb-2"
                   />
                   <v-switch
                     v-model="autoConfirm"
                     label="Confirmação automática"
-                    color="primary"
+                    color="blue-grey darken-1"
                     class="mb-2"
                   />
                 </div>
@@ -228,10 +228,10 @@
                   type="number"
                   outlined
                   dense
-                  color="primary"
+                  color="blue-grey darken-1"
                   class="mb-4"
                 />
-                <v-btn color="success" x-large block style="border-radius: 12px">
+                <v-btn color="blue-grey darken-1" x-large block style="border-radius: 12px" class="white--text">
                   <v-icon left size="20">mdi-content-save</v-icon>
                   Salvar Configurações
                 </v-btn>
@@ -275,7 +275,7 @@
             <!-- Dados do Serviço Section -->
             <div class="form-section mb-6">
               <h3 class="section-title">
-                <v-icon color="success" class="mr-2">mdi-medical-bag</v-icon>
+                <v-icon color="primary" class="mr-2">mdi-medical-bag</v-icon>
                 Dados do Serviço
               </h3>
               <v-row>
@@ -318,10 +318,10 @@
           </v-btn>
           <v-spacer />
           <v-btn 
-            :color="serviceController.editingService ? 'warning' : 'success'" 
+            color="primary" 
             :disabled="!serviceController.serviceValid" 
             @click="saveService"
-            class="px-8 py-2"
+            class="px-8 py-2 white--text"
             elevation="2"
           >
             <v-icon left>{{ serviceController.editingService ? 'mdi-content-save' : 'mdi-plus' }}</v-icon>
@@ -432,10 +432,10 @@
           </v-btn>
           <v-spacer />
           <v-btn 
-            :color="professionalController.editingProfessional ? 'warning' : 'primary'" 
+            color="cyan darken-3" 
             :disabled="!professionalController.professionalValid" 
             @click="saveProfessional"
-            class="px-8 py-2"
+            class="px-8 py-2 white--text"
             elevation="2"
           >
             <v-icon left>{{ professionalController.editingProfessional ? 'mdi-content-save' : 'mdi-plus' }}</v-icon>
@@ -448,7 +448,7 @@
     <!-- Dialog Horário -->
     <v-dialog v-model="scheduleDialog" max-width="500px" persistent>
       <v-card style="border-radius: 16px">
-        <v-card-title class="accent white--text pa-6">
+        <v-card-title class="teal lighten-2 white--text pa-6">
           <v-icon left color="white" size="28">mdi-clock-edit</v-icon>
           <div class="text-h5 font-weight-bold">
             Editar Horário
@@ -499,7 +499,7 @@
             Cancelar
           </v-btn>
           <v-spacer />
-          <v-btn color="accent" :disabled="!scheduleValid" @click="saveSchedule">
+          <v-btn color="teal lighten-2" class="white--text" :disabled="!scheduleValid" @click="saveSchedule">
             <v-icon left>mdi-check</v-icon>
             Salvar Horário
           </v-btn>
@@ -631,11 +631,11 @@ export default SettingsController.extend({
 }
 
 .service-header {
-  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
 }
 
 .professional-header {
-  background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
+  background: linear-gradient(135deg, #00838F 0%, #006064 100%);
 }
 
 .header-content {

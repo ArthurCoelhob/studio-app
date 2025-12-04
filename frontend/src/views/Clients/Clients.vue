@@ -3,7 +3,7 @@
     <v-row class="mb-6">
       <v-col cols="12">
         <h1 class="text-h3 primary--text mb-2">Clientes</h1>
-        <p class="text-subtitle-1 orange--text">Gerencie os clientes do sistema</p>
+        <p class="text-subtitle-1 secondary--text">Gerencie os clientes do sistema</p>
       </v-col>
     </v-row>
 
@@ -111,7 +111,7 @@
         <div class="dialog-header client-header">
           <div class="header-content">
             <div class="header-icon">
-              <v-avatar size="56" :color="editingClient ? 'warning' : 'success'" class="elevation-4">
+              <v-avatar size="56" :color="editingClient ? 'warning' : 'primary'" class="elevation-4">
                 <v-icon size="28" color="white">
                   {{ editingClient ? 'mdi-pencil' : 'mdi-account-plus' }}
                 </v-icon>
@@ -135,7 +135,7 @@
             <!-- Dados Pessoais Section -->
             <div class="form-section mb-6">
               <h3 class="section-title">
-                <v-icon color="success" class="mr-2">mdi-account-circle</v-icon>
+                <v-icon color="primary" class="mr-2">mdi-account-circle</v-icon>
                 Dados Pessoais
               </h3>
               <v-row>
@@ -166,7 +166,7 @@
             <!-- Contato Section -->
             <div class="form-section mb-6">
               <h3 class="section-title">
-                <v-icon color="success" class="mr-2">mdi-contacts</v-icon>
+                <v-icon color="primary" class="mr-2">mdi-contacts</v-icon>
                 Informações de Contato
               </h3>
               <v-row>
@@ -207,7 +207,7 @@
             <!-- Configurações Section -->
             <div class="form-section mb-6">
               <h3 class="section-title">
-                <v-icon color="success" class="mr-2">mdi-cog</v-icon>
+                <v-icon color="primary" class="mr-2">mdi-cog</v-icon>
                 Configurações
               </h3>
               <v-row>
@@ -253,7 +253,7 @@
           </v-btn>
           <v-spacer />
           <v-btn 
-            :color="editingClient ? 'warning' : 'success'" 
+            :color="editingClient ? 'warning' : 'primary'" 
             :disabled="!clientValid" 
             @click="saveClient"
             class="px-8 py-2"
@@ -356,7 +356,7 @@ export default ClientsController.extend({
 }
 
 .client-header {
-  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
 }
 
 .header-content {
