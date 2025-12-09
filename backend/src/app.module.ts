@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ServiceTypeModule } from './service-type/service-type.module';
 import { ClientModule } from './client/client.module';
 import { ProfessionalModule } from './professional/professional.module';
+import { BusinessHoursModule } from './business-hours/business-hours.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ProfessionalModule } from './professional/professional.module';
     ServiceTypeModule,
     ClientModule,
     ProfessionalModule,
+    BusinessHoursModule,
   ],
   controllers: [AppController],
   providers: [AppService],

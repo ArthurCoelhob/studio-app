@@ -95,7 +95,8 @@
                 class="time-slot"
                 :class="{ 
                   'available': getTimeSlot(day, hour - 1) && getTimeSlot(day, hour - 1).available,
-                  'occupied': getTimeSlot(day, hour - 1) && !getTimeSlot(day, hour - 1).available 
+                  'occupied': getTimeSlot(day, hour - 1) && !getTimeSlot(day, hour - 1).available,
+                  'unavailable': !getTimeSlot(day, hour - 1)
                 }"
                 @click="onTimeSlotClick(day, hour - 1)"
               >
@@ -127,8 +128,11 @@
                     </v-btn>
                   </div>
                 </div>
-                <div v-else class="empty-slot">
+                <div v-else-if="getTimeSlot(day, hour - 1)" class="empty-slot">
                   <v-icon color="grey lighten-2">mdi-plus</v-icon>
+                </div>
+                <div v-else class="unavailable-slot">
+                  <v-icon color="grey lighten-3" size="16">mdi-close</v-icon>
                 </div>
               </div>
             </div>
@@ -426,9 +430,10 @@ export default class Schedule extends ScheduleController {
 }
 
 .day-header.today {
-  background-color: #e0f2f1;
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
   color: #00695c;
   font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,105,92,0.1);
 }
 
 .day-name {
@@ -475,11 +480,34 @@ export default class Schedule extends ScheduleController {
 }
 
 .time-slot.available:hover {
-  background-color: #f5f5f5;
+  background-color: #e0f2f1;
+  border: 2px solid #00695c;
 }
 
 .time-slot.occupied {
   background-color: #fff3e0;
+}
+
+.time-slot.unavailable {
+  background: repeating-linear-gradient(
+    45deg,
+    #fafafa,
+    #fafafa 10px,
+    #f0f0f0 10px,
+    #f0f0f0 20px
+  );
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.time-slot.unavailable:hover {
+  background: repeating-linear-gradient(
+    45deg,
+    #fafafa,
+    #fafafa 10px,
+    #f0f0f0 10px,
+    #f0f0f0 20px
+  );
 }
 
 .appointment-card {
@@ -540,6 +568,15 @@ export default class Schedule extends ScheduleController {
 
 .empty-slot:hover {
   opacity: 0.7;
+}
+
+.unavailable-slot {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Dialog Styles */

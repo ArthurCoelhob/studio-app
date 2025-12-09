@@ -2,6 +2,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import { Professional, ProfessionalService } from '@/services/professionalService';
 import { ServiceType, ServiceTypeService } from '@/services/serviceTypeService';
 import { Client, ClientService } from '@/services/clientService';
+import { BusinessHour, BusinessHoursService } from '@/services/businessHoursService';
 
 interface Appointment {
   id?: number;
@@ -37,6 +38,7 @@ export default class ScheduleController extends Vue {
   public clients: Client[] = [];
   public professionals: Professional[] = [];
   public serviceTypes: ServiceType[] = [];
+  public businessHoursData: BusinessHour[] = [];
   
   public currentWeek: Date = new Date();
   public weekDays: DaySchedule[] = [];
@@ -117,6 +119,7 @@ export default class ScheduleController extends Vue {
         this.loadProfessionals(),
         this.loadServiceTypes(),
         this.loadAppointments(),
+        this.loadBusinessHours(),
       ]);
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
@@ -135,6 +138,33 @@ export default class ScheduleController extends Vue {
 
   private async loadServiceTypes(): Promise<void> {
     this.serviceTypes = await ServiceTypeService.getAll();
+  }
+
+  private async loadBusinessHours(): Promise<void> {
+    try {
+      this.businessHoursData = await BusinessHoursService.getAll();
+      this.updateBusinessHoursFromData();
+    } catch (error) {
+      console.error('Erro ao carregar horários:', error);
+    }
+  }
+
+  private updateBusinessHoursFromData(): void {
+    if (this.businessHoursData.length === 0) return;
+    
+    const times = this.businessHoursData.map(bh => ({
+      start: parseInt(bh.startTime.split(':')[0]),
+      end: parseInt(bh.endTime.split(':')[0])
+    }));
+    
+    const minStart = Math.min(...times.map(t => t.start));
+    const maxEnd = Math.max(...times.map(t => t.end));
+    
+    this.businessHours = {
+      start: minStart,
+      end: maxEnd,
+      interval: 60
+    };
   }
 
   private async loadAppointments(): Promise<void> {
@@ -184,8 +214,18 @@ export default class ScheduleController extends Vue {
   private generateTimeSlots(date: Date): TimeSlot[] {
     const slots: TimeSlot[] = [];
     const dateStr = date.toISOString().split('T')[0];
+    const dayOfWeek = date.getDay();
     
-    for (let hour = this.businessHours.start; hour < this.businessHours.end; hour++) {
+    const dayBusinessHours = this.businessHoursData.find(bh => bh.dayOfWeek === dayOfWeek && bh.isActive);
+    
+    if (!dayBusinessHours) {
+      return slots;
+    }
+    
+    const startHour = parseInt(dayBusinessHours.startTime.split(':')[0]);
+    const endHour = parseInt(dayBusinessHours.endTime.split(':')[0]);
+    
+    for (let hour = startHour; hour < endHour; hour++) {
       const time = `${hour.toString().padStart(2, '0')}:00`;
       const appointment = this.appointments.find(
         a => a.date === dateStr && a.time === time && this.matchesFilters(a)
